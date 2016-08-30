@@ -1,0 +1,13 @@
+#pragma once
+
+#include <vector>
+
+namespace Tengine {
+
+	class IOManager
+	{
+	public:
+		static bool readFileToBuffer(std::string filePath, std::vector<unsigned char>& buffer);
+	};
+
+}
