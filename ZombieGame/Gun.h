@@ -15,7 +15,8 @@ public:
 	void update(bool isMouseDown,
 				const glm::vec2& position,
 				const glm::vec2& direction,
-				std::vector<Bullet>& bullets);
+				std::vector<Bullet>& bullets,
+				float deltaTime);
 
 private:
 	void fire(const glm::vec2& direction,
@@ -33,6 +34,6 @@ private:
 	float _bulletSpeed;
 	float _bulletDamage;
 
-	int _frameCounter;
+	float _frameCounter;
 };
 
