@@ -34,6 +34,6 @@ private:
 	float _bulletSpeed;
 	float _bulletDamage;
 
-	float _frameCounter;
+	float _frameCounter; ///< Count frames so we know when to shoot bullets
 };
 

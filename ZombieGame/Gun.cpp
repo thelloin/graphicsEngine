@@ -34,6 +34,7 @@ void Gun::update(bool isMouseDown,
 				 float deltaTime) 
 {
 	_frameCounter += 1.0f * deltaTime;
+	// After a certain number of frames has passed we fire our gun
 	if (_frameCounter >= _fireRate && isMouseDown) {
 		fire(direction, position, bullets);
 		_frameCounter = 0;
@@ -45,15 +46,17 @@ void Gun::fire(const glm::vec2& direction,
 			   std::vector<Bullet>& bullets) {
 
 	static std::mt19937 randomEngine(time(nullptr));
+	// For offsetting the accuracy
 	std::uniform_real_distribution<float> randRotate(-_spread, _spread);
 
 	const float DEG_TO_RAD = 3.14159265359f / 180.0f;
 
 	for (int i = 0; i < _bulletsPerShot; i++) {
+		// Add a new bullet
 		bullets.emplace_back(position,
-			glm::rotate(direction, randRotate(randomEngine) * DEG_TO_RAD),
-			_bulletDamage,
-			_bulletSpeed);
+							 glm::rotate(direction, randRotate(randomEngine) * DEG_TO_RAD),
+							 _bulletDamage,
+							 _bulletSpeed);
 
 	}
 }

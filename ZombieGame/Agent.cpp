@@ -30,6 +30,7 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData)
 	// Fourth corner
 	checkTilePosition(levelData, collideTilePositions, _position.x + TILE_WIDTH, _position.y + TILE_WIDTH);
 	
+	// Check if there was no collision
 	if (collideTilePositions.size() == 0) {
 		return false;
 	}
@@ -42,22 +43,33 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData)
 	return true;
 }
 
+// Circular collision
 bool Agent::collideWithAgent(Agent* agent)
 {
+	// Minimum distance before there is a collision
 	const float MIN_DISTANCE = AGENT_RADIUS * 2.0f;
 
+	// Center position of this agent
 	glm::vec2 centerPosA = _position + glm::vec2(AGENT_RADIUS);
+	// Center position of the parameter agent
 	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
 
+	// Distance vector between the two agents
 	glm::vec2 distVec = centerPosA - centerPosB;
 
+	// Length of the distance vector
 	float distance = glm::length(distVec);
 
+	// Depth of the collision
 	float collisionDepth = MIN_DISTANCE - distance;
+
+	// If collision depth > 0 then we did collide
 	if (collisionDepth > 0) {
 
+		// Get the direction times the collision depth so we can push them away from each other
 		glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
 
+		// Push them in opposite directions
 		_position += collisionDepthVec / 2.0f;
 		agent->_position -= collisionDepthVec / 2.0f;
 		return true;
@@ -84,6 +96,7 @@ void Agent::draw(Tengine::SpriteBatch& _spriteBatch) {
 bool Agent::applyDamage(float damage)
 {
 	_health -= damage;
+	// If agent died, return true
 	if (_health <= 0) {
 		return true;
 	}
@@ -115,15 +128,14 @@ void Agent::checkTilePosition(const std::vector<std::string>& levelData,
 
 // AABB (Axis Aligned Bouding Box) collision
 void Agent::collideWithTile(glm::vec2 tilePos) {
-	/* TODO A problem is that you can get stuck with this current implementation,
-	* a solution is to sort the colliding tiles and choose to correct the one
-	* with the greatest distance.
-	*/
 	
 	const float TILE_RADIUS = (float)TILE_WIDTH / 2.0f;
+	// The minimum distance before a collision occurs
 	const float MIN_DISTANCE = AGENT_RADIUS + TILE_RADIUS;
 	
+	// Center position of the agent
 	glm::vec2 centerAgentPos = _position + glm::vec2(AGENT_RADIUS);
+	// Vector from the agent to the tile
 	glm::vec2 distVec = centerAgentPos - tilePos;
 
 	// Get the depth of the collision
@@ -132,7 +144,9 @@ void Agent::collideWithTile(glm::vec2 tilePos) {
 
 	// If either of the depth are > 0, then we collided
 	if (xDepth > 0 && yDepth > 0) {
+		// Check which collision depth is less
 		if (std::max(xDepth,0.0f) < std::max(yDepth, 0.0f)) {
+			// X collision depth is smaller so we push in X direction
 			if (distVec.x <= 0) {
 				_position.x -= xDepth;
 			}
@@ -141,6 +155,7 @@ void Agent::collideWithTile(glm::vec2 tilePos) {
 			}
 		}
 		else {
+			// Y collision depth is smaller so we push in Y direction
 			if (distVec.y <= 0) {
 				_position.y -= yDepth;
 			}

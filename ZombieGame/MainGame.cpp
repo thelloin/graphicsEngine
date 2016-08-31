@@ -53,15 +53,20 @@ void MainGame::run() {
 }
 
 void MainGame::initSystems() {
+	// Initialize the game engine
 	Tengine::init();
 
+	// Create the game window
 	_window.create("ZombieGame", _screenWidth, _screenHeight, 0);
-	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+	glClearColor(0.7f, 0.7f, 0.7f, 1.0f); /// Grey background color
 
+	// Set up the shaders
 	initShaders();
 
+	// Initialize our spritebatch
 	_agentSpriteBatch.init();
 
+	// Set up the camera
 	_camera.init(_screenWidth, _screenHeight);
 }
 
@@ -116,28 +121,33 @@ void MainGame::initShaders() {
 
 void MainGame::gameLoop() {
 
-	const float DESIRED_FPS = 60.0F;
-	const int MAX_PHYSICS_STEPS = 6;
+	// Some helpful constants
+	const float DESIRED_FPS = 60.0F; // FPS the game is designed to run at
+	const int MAX_PHYSICS_STEPS = 6; // Max number of physics steps per frame
+	const float MS_PER_SECOND = 1000; // Number of milliseconds in one second
+	const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS; // The desired frame time per frame
+	const float MAX_DELTA_TIME = 1.0f; // Maximum size of deltaTime
 
+	// Used to cap the FPS
 	Tengine::FpsLimiter fpsLimiter;
 	fpsLimiter.setMaxFPS(60.0f);
 
+	// Zoom out the camera by 4x
 	const float CAMERA_SCALE = 1.0f / 4.0f;
 	_camera.setScale(CAMERA_SCALE);
 
-	const float MS_PER_SECOND = 1000;
-	const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS;
-	const float MAX_DELTA_TIME = 1.0f;
-
+	// Start our previousTicks variable
 	float previousTicks = SDL_GetTicks();
 	
 	// Main loop
 	while (_gameState == GameState::PLAY) {
 		fpsLimiter.begin();
 
+		// Calculate the frameTime in milliseconds
 		float newTicks = SDL_GetTicks();
 		float frameTime = newTicks - previousTicks;
-		previousTicks = newTicks;
+		previousTicks = newTicks; // Store newTicks in previousTicks so we can use it next frame
+		// Get the total delta time
 		float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
 
 		checkVictory();
@@ -146,23 +156,27 @@ void MainGame::gameLoop() {
 
 		processInput();
 
-		int i = 0;
+		int i = 0; // This counter makes sure we don't spiral to death
+		// Loop while we still have steps to process
 		while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS) {
+			// The deltaTime should be the smallest of totalDeltaTime and MAX_DELTA_TIME
 			float deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
+			// Update all physics here and pass in deltaTime
 			updateAgents(deltaTime);
 			updateBullets(deltaTime);
 			totalDeltaTime -= deltaTime;
 			i++;
 		}
 
+		// Make sure the camera is bound to the player position
 		_camera.setPosition(_player->getPosition());
-
 		_camera.update();
 
 		drawGame();
 
+		// End the frame, limit the FPS, and get the current FPS
 		_fps = fpsLimiter.end();
-		std::cout << _fps << std::endl;
+		std::cout << _fps << std::endl; // Print FPS for debugging
 	}
 }
 
@@ -295,6 +309,8 @@ void MainGame::updateBullets(float deltaTime)
 }
 
 void MainGame::checkVictory() {
+	// TODO: Support for multiple levels
+
 	// If all zombies are dead we win
 	if (_zombies.empty()) {
 
@@ -373,9 +389,12 @@ void MainGame::drawGame() {
 		_bullets[i].draw(_agentSpriteBatch);
 	}
 
+	// End spritebatch creation
 	_agentSpriteBatch.end();
+	// Render to the screen
 	_agentSpriteBatch.renderBatch();
 
+	// Unbind the program
 	_textureProgram.unuse();
 
 	// Swap our buffer and draw everything to the screen!
