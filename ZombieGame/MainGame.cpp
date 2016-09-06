@@ -130,7 +130,7 @@ void MainGame::gameLoop() {
 
 	// Used to cap the FPS
 	Tengine::FpsLimiter fpsLimiter;
-	fpsLimiter.setMaxFPS(60.0f);
+	fpsLimiter.setMaxFPS(600.0f);
 
 	// Zoom out the camera by 4x
 	const float CAMERA_SCALE = 1.0f / 4.0f;
