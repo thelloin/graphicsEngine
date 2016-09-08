@@ -374,9 +374,14 @@ void MainGame::drawGame() {
 	// Begin drawing agents
 	_agentSpriteBatch.begin();
 
+	const glm::vec2 AGENT_DIMS(AGENT_RADIUS * 2);
+
 	// Draw the humans
 	for (int i = 0; i < _humans.size(); i++) {
-		_humans[i]->draw(_agentSpriteBatch);
+		if (_camera.isBoxInView(_humans[i]->getPosition(), AGENT_DIMS))
+		{
+			_humans[i]->draw(_agentSpriteBatch);
+		}
 	}
 
 	// Draw the zombies
