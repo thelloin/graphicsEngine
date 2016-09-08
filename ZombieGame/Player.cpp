@@ -76,7 +76,7 @@ void Player::update(const std::vector<std::string>& levelData,
 
 		glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
 
-		_guns[_currentGunIndex]->update(_inputManager->isKeyPressed(SDL_BUTTON_LEFT),
+		_guns[_currentGunIndex]->update(_inputManager->isKeyDown(SDL_BUTTON_LEFT),
 										centerPosition,
 										direction,
 										*_bullets,

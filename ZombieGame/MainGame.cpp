@@ -386,10 +386,13 @@ void MainGame::drawGame() {
 
 	// Draw the zombies
 	for (int i = 0; i < _zombies.size(); i++) {
-		_zombies[i]->draw(_agentSpriteBatch);
+		if (_camera.isBoxInView(_zombies[i]->getPosition(), AGENT_DIMS))
+		{
+			_zombies[i]->draw(_agentSpriteBatch);
+		}
 	}
 
-	// Draw the zombies
+	// Draw the bullets
 	for (int i = 0; i < _bullets.size(); i++) {
 		_bullets[i].draw(_agentSpriteBatch);
 	}
