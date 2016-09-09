@@ -65,9 +65,15 @@ void MainGame::initSystems() {
 
 	// Initialize our spritebatch
 	_agentSpriteBatch.init();
+	_hudSpriteBatch.init();
+
+	// Initialize sprite font
+	_spriteFont = new Tengine::SpriteFont("Fonts/chintzy.ttf", 64);
 
 	// Set up the camera
 	_camera.init(_screenWidth, _screenHeight);
+	_hudCamera.init(_screenWidth, _screenHeight);
+	_hudCamera.setPosition(glm::vec2(_screenWidth / 2, _screenHeight / 2));
 }
 
 void MainGame::initLevel() {
@@ -171,6 +177,8 @@ void MainGame::gameLoop() {
 		// Make sure the camera is bound to the player position
 		_camera.setPosition(_player->getPosition());
 		_camera.update();
+
+		_hudCamera.update();
 
 		drawGame();
 
@@ -402,9 +410,46 @@ void MainGame::drawGame() {
 	// Render to the screen
 	_agentSpriteBatch.renderBatch();
 
+	// Render the heads up display
+	drawHud();
+
 	// Unbind the program
 	_textureProgram.unuse();
 
 	// Swap our buffer and draw everything to the screen!
 	_window.swapBuffer();
+}
+
+void MainGame::drawHud() 
+{
+	char buffer[256];
+
+	// Grab the hud camera matrix
+	glm::mat4 projectionMatrix = _hudCamera.getCameraMatrix();
+	GLint pUniform = _textureProgram.getUniformLocation("P");
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	_hudSpriteBatch.begin();
+
+	sprintf_s(buffer, "Num Humans: %d", _humans.size());
+
+	_spriteFont->draw(_hudSpriteBatch,
+					  buffer, glm::vec2(0, 0),
+					  glm::vec2(0.5f),
+					  0.0f, 
+					  Tengine::ColorRGBA8(255, 255, 255, 255),
+					  Tengine::Justification::LEFT);
+
+	sprintf_s(buffer, "Num Zombies: %d", _zombies.size());
+
+	_spriteFont->draw(_hudSpriteBatch,
+					  buffer, glm::vec2(0, 36),
+					  glm::vec2(0.5f),
+					  0.0f,
+					  Tengine::ColorRGBA8(255, 255, 255, 255),
+					  Tengine::Justification::LEFT);
+
+	_hudSpriteBatch.end();
+
+	_hudSpriteBatch.renderBatch();
 }

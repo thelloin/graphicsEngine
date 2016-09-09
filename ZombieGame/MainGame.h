@@ -5,6 +5,7 @@
 #include <Tengine/Camera2D.h>
 #include <Tengine/InputManager.h>
 #include <Tengine/SpriteBatch.h>
+#include <Tengine/SpriteFont.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -54,6 +55,9 @@ private:
 	/// Renders the game
 	void drawGame();
 
+	/// Draw the HUD
+	void drawHud();
+
 	/// Member Variables
 	Tengine::Window _window; ///< The game window
 
@@ -62,8 +66,10 @@ private:
 	Tengine::InputManager _inputManager; ///< Handles input
 
 	Tengine::Camera2D _camera; ///< Main Camera
+	Tengine::Camera2D _hudCamera; ///< Hud Camera
 
 	Tengine::SpriteBatch _agentSpriteBatch; ///< Draws all agents
+	Tengine::SpriteBatch _hudSpriteBatch;
 
 	std::vector<Level*> _levels; ///< vector of all levels
 
@@ -80,6 +86,8 @@ private:
 
 	int _numHumansKilled; ///< Humans killed by the player
 	int _numZombiesKilled; ///< Zombies killed by the player
+
+	Tengine::SpriteFont* _spriteFont;
 
 	float _fps;
 };
