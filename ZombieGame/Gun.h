@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
+#include <Tengine/AudioEngine.h>
 
 #include "Bullet.h"
 
@@ -9,7 +10,7 @@ class Gun
 {
 public:
 	Gun(std::string name, int fireRate, int bulletsPerShot, float spread,
-		float bulletDamage, float bulletSpeed);
+		float bulletDamage, float bulletSpeed, Tengine::SoundEffect fireEffect);
 	~Gun();
 
 	void update(bool isMouseDown,
@@ -22,6 +23,8 @@ private:
 	void fire(const glm::vec2& direction,
 			  const glm::vec2& position,
 			  std::vector<Bullet>& bullets);
+
+	Tengine::SoundEffect m_fireEffect;
 
 	std::string _name;
 

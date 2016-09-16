@@ -9,14 +9,16 @@ Gun::Gun(std::string name,
 		 int bulletsPerShot,
 		 float spread,
 		 float bulletDamage,
-		 float bulletSpeed) :
+		 float bulletSpeed,
+		 Tengine::SoundEffect fireEffect) :
 	_name(name),
 	_fireRate(fireRate),
 	_bulletsPerShot(bulletsPerShot),
 	_spread(spread),
 	_bulletDamage(bulletDamage),
 	_bulletSpeed(bulletSpeed),
-	_frameCounter(0)
+	_frameCounter(0),
+	m_fireEffect(fireEffect)
 {
 	// Empty
 }
@@ -48,6 +50,8 @@ void Gun::fire(const glm::vec2& direction,
 	static std::mt19937 randomEngine(time(nullptr));
 	// For offsetting the accuracy
 	std::uniform_real_distribution<float> randRotate(-_spread, _spread);
+
+	m_fireEffect.play();
 
 	const float DEG_TO_RAD = 3.14159265359f / 180.0f;
 

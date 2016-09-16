@@ -6,6 +6,7 @@
 #include <Tengine/InputManager.h>
 #include <Tengine/SpriteBatch.h>
 #include <Tengine/SpriteFont.h>
+#include <Tengine/AudioEngine.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -88,6 +89,8 @@ private:
 	int _numZombiesKilled; ///< Zombies killed by the player
 
 	Tengine::SpriteFont* _spriteFont;
+
+	Tengine::AudioEngine m_audioEngine;
 
 	float _fps;
 };

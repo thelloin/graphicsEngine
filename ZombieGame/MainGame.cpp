@@ -49,12 +49,19 @@ void MainGame::run() {
 
 	initLevel();
 
+	// Play music, this code should be moved to a better place..
+	Tengine::Music music = m_audioEngine.loadMusic("Sound/XYZ.ogg");
+	music.play(-1);
+
 	gameLoop();
 }
 
 void MainGame::initSystems() {
 	// Initialize the game engine
 	Tengine::init();
+
+	// Initialize sound, must happen after Tengine::init
+	m_audioEngine.init();
 
 	// Create the game window
 	_window.create("ZombieGame", _screenWidth, _screenHeight, 0);
@@ -111,9 +118,9 @@ void MainGame::initLevel() {
 
 	// Set up the players guns
 	const float BULLET_SPEED = 20.0f;
-	_player->addGun(new Gun("Magnum", 10, 1, 5.0f, 30, BULLET_SPEED));
-	_player->addGun(new Gun("Shotgun", 30, 12, 20.0f, 4, BULLET_SPEED));
-	_player->addGun(new Gun("MP5", 2, 1, 10.0f, 20, BULLET_SPEED));
+	_player->addGun(new Gun("Magnum", 10, 1, 5.0f, 30, BULLET_SPEED, m_audioEngine.loadSoundEffect("Sound/shots/pistol.wav")));
+	_player->addGun(new Gun("Shotgun", 30, 12, 20.0f, 4, BULLET_SPEED, m_audioEngine.loadSoundEffect("Sound/shots/shotgun.wav")));
+	_player->addGun(new Gun("MP5", 2, 1, 10.0f, 20, BULLET_SPEED, m_audioEngine.loadSoundEffect("Sound/shots/cg1.wav")));
 }
 
 void MainGame::initShaders() {
