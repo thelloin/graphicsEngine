@@ -1,5 +1,5 @@
 #include "AudioEngine.h"
-#include "Errors.h"
+#include "TengineErrors.h"
 
 namespace Tengine {
 

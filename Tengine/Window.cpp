@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "Errors.h"
+#include "TengineErrors.h"
 
 namespace Tengine {
 

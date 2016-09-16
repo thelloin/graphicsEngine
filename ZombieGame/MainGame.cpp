@@ -2,7 +2,7 @@
 
 #include <Tengine/Tengine.h>
 #include <Tengine/Timing.h>
-#include <Tengine/Errors.h>
+#include <Tengine/TengineErrors.h>
 #include <random>
 #include <ctime>
 #include <algorithm>
