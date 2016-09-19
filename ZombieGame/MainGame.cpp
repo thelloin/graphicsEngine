@@ -3,12 +3,14 @@
 #include <Tengine/Tengine.h>
 #include <Tengine/Timing.h>
 #include <Tengine/TengineErrors.h>
+#include <Tengine/ResourceManager.h>
 #include <random>
 #include <ctime>
 #include <algorithm>
 
 #include <SDL/SDL.h>
 #include <iostream>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include "Gun.h"
 #include "Zombie.h"
@@ -81,6 +83,11 @@ void MainGame::initSystems() {
 	_camera.init(_screenWidth, _screenHeight);
 	_hudCamera.init(_screenWidth, _screenHeight);
 	_hudCamera.setPosition(glm::vec2(_screenWidth / 2, _screenHeight / 2));
+
+	// Initialize particles
+	m_bloodParticleBatch = new Tengine::ParticleBatch2D();
+	m_bloodParticleBatch->init(1000, 0.07f, Tengine::ResourceManager::getTexture("Textures/circle.png"));
+	m_particleEngine.addParticleBatch(m_bloodParticleBatch);
 }
 
 void MainGame::initLevel() {
@@ -177,9 +184,13 @@ void MainGame::gameLoop() {
 			// Update all physics here and pass in deltaTime
 			updateAgents(deltaTime);
 			updateBullets(deltaTime);
+			m_particleEngine.update(deltaTime);
+
 			totalDeltaTime -= deltaTime;
 			i++;
 		}
+
+		
 
 		// Make sure the camera is bound to the player position
 		_camera.setPosition(_player->getPosition());
@@ -269,6 +280,9 @@ void MainGame::updateBullets(float deltaTime)
 		for (int j = 0; j < _zombies.size();) {
 			// Check collision
 			if (_bullets[i].collideWithAgent(_zombies[j])) {
+				// Add blood
+				addBlood(_bullets[i].getPosition(), 5);
+
 				// Damage zombie, and kill it if its out of health
 				if (_zombies[j]->applyDamage(_bullets[i].getDamage())) {
 					delete _zombies[j];
@@ -297,6 +311,9 @@ void MainGame::updateBullets(float deltaTime)
 			for (int j = 1; j < _humans.size();) {
 				// Check collision
 				if (_bullets[i].collideWithAgent(_humans[j])) {
+					// Add blood
+					addBlood(_bullets[i].getPosition(), 5);
+
 					// Damage human, and kill it if its out of health
 					if (_humans[j]->applyDamage(_bullets[i].getDamage())) {
 						delete _humans[j];
@@ -417,6 +434,9 @@ void MainGame::drawGame() {
 	// Render to the screen
 	_agentSpriteBatch.renderBatch();
 
+	// Render the particles
+	m_particleEngine.draw(&_agentSpriteBatch);
+
 	// Render the heads up display
 	drawHud();
 
@@ -459,4 +479,17 @@ void MainGame::drawHud()
 	_hudSpriteBatch.end();
 
 	_hudSpriteBatch.renderBatch();
+}
+
+void MainGame::addBlood(const glm::vec2& position, int numParticles)
+{
+	static std::mt19937 randEngine(time(nullptr));
+	static std::uniform_real_distribution<float> randAngle(0.0f, 2.0f * M_PI);
+
+	glm::vec2 vel(2.0f, 0.0f);
+	Tengine::ColorRGBA8 col(255, 0, 0, 255);
+
+	for (int i = 0; i < numParticles; ++i) {
+		m_bloodParticleBatch->AddParticle(position, glm::rotate(vel, randAngle(randEngine)), col, 20.0);
+	}
 }

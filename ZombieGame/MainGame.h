@@ -7,6 +7,8 @@
 #include <Tengine/SpriteBatch.h>
 #include <Tengine/SpriteFont.h>
 #include <Tengine/AudioEngine.h>
+#include <Tengine/ParticleEngine2D.h>
+#include <Tengine/ParticleBatch2D.h>
 
 #include "Level.h"
 #include "Player.h"
@@ -59,6 +61,9 @@ private:
 	/// Draw the HUD
 	void drawHud();
 
+	/// Adds blood to the particle engine
+	void addBlood(const glm::vec2& position, int numParticles);
+
 	/// Member Variables
 	Tengine::Window _window; ///< The game window
 
@@ -71,6 +76,9 @@ private:
 
 	Tengine::SpriteBatch _agentSpriteBatch; ///< Draws all agents
 	Tengine::SpriteBatch _hudSpriteBatch;
+
+	Tengine::ParticleEngine2D m_particleEngine;
+	Tengine::ParticleBatch2D* m_bloodParticleBatch;
 
 	std::vector<Level*> _levels; ///< vector of all levels
 
