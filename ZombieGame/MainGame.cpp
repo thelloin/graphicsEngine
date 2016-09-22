@@ -58,6 +58,13 @@ void MainGame::run() {
 	gameLoop();
 }
 
+// Custom update function for blood particles
+void updateBloodParticle(Tengine::Particle2D& particle, float deltaTime)
+{
+	particle.position += particle.velocity * deltaTime;
+	particle.color.a = (GLubyte)(particle.life * 255.0f);
+}
+
 void MainGame::initSystems() {
 	// Initialize the game engine
 	Tengine::init();
@@ -86,7 +93,13 @@ void MainGame::initSystems() {
 
 	// Initialize particles
 	m_bloodParticleBatch = new Tengine::ParticleBatch2D();
-	m_bloodParticleBatch->init(1000, 0.07f, Tengine::ResourceManager::getTexture("Textures/circle.png"));
+	m_bloodParticleBatch->init(1000,
+							   0.07f,
+							   Tengine::ResourceManager::getTexture("Textures/particle.png"),
+							   [](Tengine::Particle2D& particle, float deltaTime) {
+		particle.position += particle.velocity * deltaTime;
+		particle.color.a = (GLubyte)(particle.life * 255.0f);
+	});
 	m_particleEngine.addParticleBatch(m_bloodParticleBatch);
 }
 
