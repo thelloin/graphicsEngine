@@ -1,6 +1,6 @@
 #include "Zombie.h"
-
 #include "Human.h"
+#include <Tengine/ResourceManager.h>
 
 Zombie::Zombie()
 {
@@ -17,7 +17,8 @@ void Zombie::init(float speed, glm::vec2 pos)
 	_position = pos;
 	_health = 150;
 	// Set green color
-	_color = Tengine::ColorRGBA8(0, 160, 0, 255);
+	_color = Tengine::ColorRGBA8(255, 255, 255, 255);
+	m_textureID = Tengine::ResourceManager::getTexture("Textures/zombie.png").id;
 }
 
 void Zombie::update(const std::vector<std::string>& levelData,
@@ -31,10 +32,10 @@ void Zombie::update(const std::vector<std::string>& levelData,
 	// If we found a human, move towards him
 	if (closestHuman != nullptr) {
 		// Get the direction vector towards the human
-		glm::vec2 direction = glm::normalize(closestHuman->getPosition() - _position);
-		_position += direction * _speed * deltaTime;
+		m_direction = glm::normalize(closestHuman->getPosition() - _position);
+		_position += m_direction * _speed * deltaTime;
 	}
-
+	
 	// Do collision
 	collideWithLevel(levelData);
 }

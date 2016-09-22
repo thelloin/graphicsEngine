@@ -2,6 +2,7 @@
 #include <ctime>
 #include <random>
 #include <glm/gtx/rotate_vector.hpp>
+#include <Tengine/ResourceManager.h>
 
 
 Human::Human() : _frames(0)
@@ -20,19 +21,21 @@ void Human::init(float speed, glm::vec2 pos) {
 
 	_health = 20;
 
-	_color.r = 200;
-	_color.g = 0;
-	_color.b = 200;
+	_color.r = 255;
+	_color.g = 255;
+	_color.b = 255;
 	_color.a = 255;
 
 	_speed = speed;
 	_position = pos;
 	// Get random direction
-	_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));
+	m_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));
 	// In case we get zero direction
-	if (_direction.length() == 0) _direction = glm::vec2(1.0f, 0.0f);
+	if (m_direction.length() == 0) m_direction = glm::vec2(1.0f, 0.0f);
 
-	_direction = glm::normalize(_direction);
+	m_direction = glm::normalize(m_direction);
+
+	m_textureID = Tengine::ResourceManager::getTexture("Textures/human.png").id;
 }
 
 void Human::update(const std::vector<std::string>& levelData,
@@ -44,13 +47,13 @@ void Human::update(const std::vector<std::string>& levelData,
 	static std::mt19937 randomEngine(time(nullptr));
 	static std::uniform_real_distribution<float> randRotate(-40.0f, 40.0f);
 
-	_position += _direction * _speed * deltaTime;
+	_position += m_direction * _speed * deltaTime;
 
 	const float DEG_TO_RAD = 3.14159265359f / 180.0f;
 
 	// Randomly change direction every 20 frames
 	if (_frames == 20) {
-		_direction = glm::rotate(_direction, randRotate(randomEngine) * DEG_TO_RAD);
+		m_direction = glm::rotate(m_direction, randRotate(randomEngine) * DEG_TO_RAD);
 		_frames = 0;
 	}
 	else {
@@ -58,6 +61,6 @@ void Human::update(const std::vector<std::string>& levelData,
 	}
 
 	if (collideWithLevel(levelData)) {
-		_direction = glm::rotate(_direction, randRotate(randomEngine) * DEG_TO_RAD);
+		m_direction = glm::rotate(m_direction, randRotate(randomEngine) * DEG_TO_RAD);
 	}
 }

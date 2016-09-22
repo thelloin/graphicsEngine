@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <SDL/SDL.h>
+#include <Tengine/ResourceManager.h>
 
 #include "Gun.h"
 
@@ -21,15 +22,16 @@ void Player::init(float speed,
 {
 	_speed = speed;
 	_position = pos;
-	_color.r = 0;
-	_color.g = 0;
-	_color.b = 185;
+	_color.r = 255;
+	_color.g = 255;
+	_color.b = 255;
 	_color.a = 255;
 
 	_inputManager = inputManager;
 	_camera = camera;
 	_bullets = bullets;
 	_health = 150;
+	m_textureID = Tengine::ResourceManager::getTexture("Textures/player.png").id;
 }
 
 void Player::addGun(Gun* gun) 
@@ -67,18 +69,18 @@ void Player::update(const std::vector<std::string>& levelData,
 		_currentGunIndex = 2;
 	}
 
-	if (_currentGunIndex != -1) {
+	glm::vec2 mouseCoords = _inputManager->getMouseCoords();
+	mouseCoords = _camera->convertScreenToWorld(mouseCoords);
 
-		glm::vec2 mouseCoords = _inputManager->getMouseCoords();
-		mouseCoords = _camera->convertScreenToWorld(mouseCoords);
+	glm::vec2 centerPosition = _position + glm::vec2(AGENT_RADIUS);
 
-		glm::vec2 centerPosition = _position + glm::vec2(AGENT_RADIUS);
+	m_direction = glm::normalize(mouseCoords - centerPosition);
 
-		glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
+	if (_currentGunIndex != -1) {	
 
 		_guns[_currentGunIndex]->update(_inputManager->isKeyDown(SDL_BUTTON_LEFT),
 										centerPosition,
-										direction,
+										m_direction,
 										*_bullets,
 										deltaTime);
 	}

@@ -80,8 +80,7 @@ bool Agent::collideWithAgent(Agent* agent)
 
 void Agent::draw(Tengine::SpriteBatch& _spriteBatch) {
 
-	static int textureID = Tengine::ResourceManager::getTexture("Textures/circle.png").id;
-
+	
 	const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
 	glm::vec4 destRect;
@@ -90,7 +89,7 @@ void Agent::draw(Tengine::SpriteBatch& _spriteBatch) {
 	destRect.z = AGENT_WIDTH;
 	destRect.w = AGENT_WIDTH;
 
-	_spriteBatch.draw(destRect, uvRect, textureID, 0.0f, _color);
+	_spriteBatch.draw(destRect, uvRect, m_textureID, 0.0f, _color, m_direction);
 }
 
 bool Agent::applyDamage(float damage)
