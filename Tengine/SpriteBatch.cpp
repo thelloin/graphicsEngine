@@ -92,7 +92,7 @@ namespace Tengine {
 	{
 		// Set up pointers for fast sorting
 		_glyphPointers.resize(_glyphs.size());
-		for (int i = 0; i < _glyphs.size(); ++i)
+		for (size_t i = 0; i < _glyphs.size(); ++i)
 		{
 			_glyphPointers[i] = &_glyphs[i];
 		}
@@ -125,7 +125,7 @@ namespace Tengine {
 	{
 		glBindVertexArray(_vao);
 
-		for (int i = 0; i < _renderBatches.size(); i++)
+		for (size_t i = 0; i < _renderBatches.size(); i++)
 		{
 			glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
 
@@ -157,7 +157,7 @@ namespace Tengine {
 		vertices[cv++] = _glyphPointers[0]->topLeft;
 		offset += 6;
 
-		for (int cg = 1; cg < _glyphPointers.size(); cg++)
+		for (size_t cg = 1; cg < _glyphPointers.size(); cg++)
 		{
 			if (_glyphPointers[cg]->texture != _glyphPointers[cg - 1]->texture) {
 				_renderBatches.emplace_back(offset, 6, _glyphPointers[cg]->texture);

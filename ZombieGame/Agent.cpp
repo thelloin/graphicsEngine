@@ -36,7 +36,7 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData)
 	}
 
 	// Do the collision
-	for (int i = 0; i < collideTilePositions.size(); i++) {
+	for (size_t i = 0; i < collideTilePositions.size(); i++) {
 		collideWithTile(collideTilePositions[i]);
 	}
 
