@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZombieGame", "ZombieGame\Zo
 		{B3EFE826-5C32-4010-BB41-ECC9A6DFA26E} = {B3EFE826-5C32-4010-BB41-ECC9A6DFA26E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BallGame", "BallGame\BallGame.vcxproj", "{28AE2543-08F6-4B4D-8376-8638975CD644}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9BBCC16-3FC1-42E8-8FCE-D767432E7EDD} = {E9BBCC16-3FC1-42E8-8FCE-D767432E7EDD}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +52,14 @@ Global
 		{E9BBCC16-3FC1-42E8-8FCE-D767432E7EDD}.Release|x64.Build.0 = Release|x64
 		{E9BBCC16-3FC1-42E8-8FCE-D767432E7EDD}.Release|x86.ActiveCfg = Release|Win32
 		{E9BBCC16-3FC1-42E8-8FCE-D767432E7EDD}.Release|x86.Build.0 = Release|Win32
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Debug|x64.ActiveCfg = Debug|x64
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Debug|x64.Build.0 = Debug|x64
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Debug|x86.ActiveCfg = Debug|Win32
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Debug|x86.Build.0 = Debug|Win32
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Release|x64.ActiveCfg = Release|x64
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Release|x64.Build.0 = Release|x64
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Release|x86.ActiveCfg = Release|Win32
+		{28AE2543-08F6-4B4D-8376-8638975CD644}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
