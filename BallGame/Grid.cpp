@@ -1,4 +1,5 @@
 #include "Grid.h"
+#include <iostream>
 
 
 
@@ -9,7 +10,8 @@ Grid::Grid(int width, int height, int cellSize) :
 {
 	m_numXCells = (int)ceil((float)m_width / m_cellSize);
 	m_numYCells = (int)ceil((float)m_height / m_cellSize);
-
+	std::cout << "Grid constructor:\nm_numXCell: " << m_numXCells;
+	std::cout << "m_numYCell: " << m_numYCells << std::endl;
 	// Allocate all the cells
 	const int BALLS_TO_RESERVE = 20;
 	m_cells.resize(m_numXCells * m_numYCells);
