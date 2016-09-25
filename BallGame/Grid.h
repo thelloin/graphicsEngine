@@ -10,6 +10,7 @@ struct Cell
 
 class Grid
 {
+	friend class BallController;
 public:
 	Grid(int width, int height, int cellSize);
 	~Grid();
