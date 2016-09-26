@@ -51,7 +51,7 @@ Cell* Grid::getCell(int x, int y)
 	if (y < 0) y = 0;
 	if (y >= m_numYCells) y = m_numYCells - 1;
 
-	return &m_cells[y * m_numYCells + x];
+	return &m_cells[y * m_numXCells + x];
 }
 
 // Gets cell based on window coordinates

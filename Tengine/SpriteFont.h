@@ -33,7 +33,7 @@
 
 namespace Tengine {
 
-    class GLTexture;
+    struct GLTexture;
     class SpriteBatch;
 
     struct CharGlyph {

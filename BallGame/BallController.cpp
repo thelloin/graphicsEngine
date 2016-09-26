@@ -58,7 +58,7 @@ void BallController::updateBalls(std::vector<Ball>& balls, Grid* grid, float del
 			if (ball.velocity.y > 0) ball.velocity.y *= -1;
 		}
 
-		// Check to see if the ball moved
+		// Check to see if the ball moved to a new cell
 		Cell* newCell = grid->getCell(ball.position);
 		if (newCell != ball.ownerCell)
 		{
@@ -112,11 +112,8 @@ void BallController::onMouseMove(std::vector<Ball>& balls, float mouseX, float m
 
 void BallController::updateCollision(Grid* grid)
 {
-	
-	int totalNumberOfBalls = 0; // For debug
 	for (size_t i = 0; i < grid->m_cells.size(); ++i)
 	{
-		totalNumberOfBalls += grid->m_cells[i].balls.size();
 		int x = i % grid->m_numXCells;
 		int y = i / grid->m_numXCells;
 
@@ -175,8 +172,15 @@ void BallController::checkCollision(Ball& ball1, Ball& ball2)
 	if (collisionDepth > 0)
 	{
 		// Push away the balls on ratio of masses
-		ball1.position -= distDir * collisionDepth * (ball2.mass / ball1.mass) * 0.5f;
-		ball2.position += distDir * collisionDepth * (ball1.mass / ball2.mass) * 0.5f;
+		//ball1.position -= distDir * collisionDepth * (ball2.mass / ball1.mass) * 0.5f;
+		//ball2.position += distDir * collisionDepth * (ball1.mass / ball2.mass) * 0.5f;
+		if (ball1.mass < ball2.mass)
+		{
+			ball1.position -= distDir * collisionDepth;
+		}
+		else {
+			ball2.position += distDir * collisionDepth;
+		}
 
 		// Calculate deflection. http://stackoverflow.com/a/345863
 		float aci = glm::dot(ball1.velocity, distDir);

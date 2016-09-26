@@ -126,7 +126,7 @@ void MainGame::initBalls()
 	possibleBalls.emplace_back(__VA_ARGS__);
 
 	// Numbers of balls to spawn
-	const int NUM_BALLS = 100;
+	const int NUM_BALLS = 500;
 
 	// Random engine
 	std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -144,11 +144,11 @@ void MainGame::initBalls()
 
 	// Adds the balls using a macro
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(255, 255, 255, 255),
-			 10.0f, 1.0f, 0.5f, 7.0f, totalProbability);
+			 5.0f, 1.0f, 0.5f, 7.0f, totalProbability);
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(0, 0, 255, 255),
-			 10.0f, 1.0f, 0.5f, 3.0f, totalProbability);
+			 5.0f, 1.0f, 0.5f, 3.0f, totalProbability);
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(0, 255, 0, 255),
-			 10.0f, 1.0f, 0.5f, 3.0f, totalProbability);
+			 5.0f, 1.0f, 0.5f, 3.0f, totalProbability);
 	//ADD_BALL(1.0f, Tengine::ColorRGBA8(254, 0, 0, 255),
 	//		 3.0f, 4.0f, 0.0f, 0.0f, totalProbability);
 
@@ -156,7 +156,8 @@ void MainGame::initBalls()
 	std::uniform_real_distribution<float> spawn(0.0f, totalProbability);
 
 	// Small optimization that sets the size of the interal array to prevent
-	// extra allocation
+	// extra allocation, this MUST be here because Grid holds pointers
+	// to all the balls, cant resize m_balls then..
 	m_balls.reserve(NUM_BALLS);
 
 	// Set up ball to spawn with default value
