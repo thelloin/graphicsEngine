@@ -65,8 +65,8 @@ void MainGame::init()
 	
 	//m_screenWidth = 1890;
 	//m_screenHeight = 1010;
-	m_screenWidth = 800;
-	m_screenHeight = 600;
+	m_screenWidth = 1100;
+	m_screenHeight = 900;
 
 	m_window.create("Ball Game", m_screenWidth, m_screenHeight, 0);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -126,7 +126,7 @@ void MainGame::initBalls()
 	possibleBalls.emplace_back(__VA_ARGS__);
 
 	// Numbers of balls to spawn
-	const int NUM_BALLS = 500;
+	const int NUM_BALLS = 3000;
 
 	// Random engine
 	std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -144,7 +144,7 @@ void MainGame::initBalls()
 
 	// Adds the balls using a macro
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(255, 255, 255, 255),
-			 5.0f, 1.0f, 0.5f, 7.0f, totalProbability);
+			 5.0f, 1.0f, 0.5f, 3.0f, totalProbability);
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(0, 0, 255, 255),
 			 5.0f, 1.0f, 0.5f, 3.0f, totalProbability);
 	ADD_BALL(1.0f, Tengine::ColorRGBA8(0, 255, 0, 255),
@@ -259,21 +259,34 @@ void MainGame::processInput()
 	{
 		switch (evnt.type)
 		{
-		case SDLK_ESCAPE:
-			m_gameState = GameState::EXIT;
-			break;
+		//case SDLK_ESCAPE:
+			//m_gameState = GameState::EXIT;
+			//break;
 		case SDL_QUIT:
 			m_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
+			m_ballController.onMouseMove(m_balls, (float)evnt.motion.x, (float)m_screenHeight - (float)evnt.motion.y);
+			m_inputManager.setMouseCoords((float)evnt.motion.x, (float)evnt.motion.y);
+			break;
+		case SDL_KEYDOWN:
+			m_inputManager.pressKey(evnt.key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			m_inputManager.releaseKey(evnt.key.keysym.sym);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			
+			m_ballController.onMouseDown(m_balls, (float)evnt.button.x, (float)m_screenHeight - (float)evnt.button.y);
+			m_inputManager.pressKey(evnt.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			m_ballController.onMouseUp(m_balls);
+			m_inputManager.releaseKey(evnt.button.button);
 			break;
 		}
 	}
 	
-	if (m_inputManager.isKeyDown(SDLK_ESCAPE))
+	if (m_inputManager.isKeyPressed(SDLK_ESCAPE))
 	{
 		m_gameState = GameState::EXIT;
 	}
