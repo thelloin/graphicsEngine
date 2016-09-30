@@ -2,15 +2,18 @@
 
 #include <vector>
 
+#define SCREEN_INDEX_NO_INDEX -1
+
 namespace Tengine {
 
-	class MainGame;
+	class IMainGame;
 	class IGameScreen;
 
 	class ScreenList
 	{
 	public:
-		ScreenList(MainGame* game);
+		ScreenList(IMainGame* game);
+		~ScreenList();
 
 		IGameScreen* moveNext();
 		IGameScreen* movePrevious();
@@ -20,9 +23,11 @@ namespace Tengine {
 
 		void destroy();
 
+		IGameScreen* getCurrent();
+
 	protected:
-		MainGame* m_game = nullptr;
-		std::vector<IGameScreen*> m_screen;
+		IMainGame* m_game = nullptr;
+		std::vector<IGameScreen*> m_screens;
 		int m_currentScreenIndex = -1;
 	};
 

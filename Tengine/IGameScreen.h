@@ -2,7 +2,7 @@
 
 namespace Tengine {
 
-	class MainGame;
+	class IMainGame;
 
 	enum class ScreenState {
 		NONE,
@@ -18,7 +18,7 @@ namespace Tengine {
 		IGameScreen() {
 			// Empty
 		}
-		~IGameScreen() {
+		virtual ~IGameScreen() {
 			// Empty
 		}
 
@@ -26,7 +26,7 @@ namespace Tengine {
 		virtual int getNextScreenIndex() const = 0;
 		virtual int getPreviousScreenIndex() const = 0;
 
-		// Called at beginnig and end of application
+		// Called at beginning and end of application
 		virtual void build() = 0;
 		virtual void destroy() = 0;
 
@@ -42,9 +42,11 @@ namespace Tengine {
 			return m_screenIndex;
 		}
 
+		void setParentGame(IMainGame* game) { m_game = game; }
+
 	protected:
 		ScreenState m_currentState = ScreenState::NONE;
-		MainGame* m_game = nullptr;
+		IMainGame* m_game = nullptr;
 		int m_screenIndex = -1;
 	};
 
