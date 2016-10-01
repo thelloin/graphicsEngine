@@ -11,6 +11,11 @@ namespace Tengine {
 
 	}
 
+	ScreenList::~ScreenList()
+	{
+		destroy();
+	}
+
 	IGameScreen* ScreenList::moveNext()
 	{
 		IGameScreen* currentScreen = getCurrent();
@@ -38,6 +43,7 @@ namespace Tengine {
 
 	void ScreenList::addScreen(IGameScreen* nextScreen)
 	{
+		nextScreen->m_screenIndex = m_screens.size();
 		m_screens.push_back(nextScreen);
 		nextScreen->build();
 		nextScreen->setParentGame(m_game);
@@ -48,15 +54,9 @@ namespace Tengine {
 		for (size_t i = 0; i < m_screens.size(); i++)
 		{
 			m_screens[i]->destroy();
-			delete m_screens[i];
 		}
 		m_screens.resize(0);
 		m_currentScreenIndex = SCREEN_INDEX_NO_INDEX;
-	}
-
-	ScreenList::~ScreenList()
-	{
-		destroy();
 	}
 
 	IGameScreen* ScreenList::getCurrent()

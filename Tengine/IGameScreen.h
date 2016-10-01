@@ -15,6 +15,8 @@ namespace Tengine {
 	class IGameScreen
 	{
 	public:
+		friend class ScreenList;
+
 		IGameScreen() {
 			// Empty
 		}
@@ -41,8 +43,12 @@ namespace Tengine {
 		int getScreenIndex() const {
 			return m_screenIndex;
 		}
+		void setRunning() { m_currentState = ScreenState::RUNNING; }
 
+		// Getters and setters
 		void setParentGame(IMainGame* game) { m_game = game; }
+
+		ScreenState getState() const { return m_currentState; }
 
 	protected:
 		ScreenState m_currentState = ScreenState::NONE;
