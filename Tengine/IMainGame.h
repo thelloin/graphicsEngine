@@ -31,6 +31,8 @@ namespace Tengine {
 		void onSDLEvent(SDL_Event& evnt);
 
 		const float getFps() const { return m_fps; }
+		
+		InputManager inputManager;
 
 	protected:
 		virtual void update();
@@ -44,6 +46,6 @@ namespace Tengine {
 		bool m_isRunning = false;
 		float m_fps = 0.0f;
 		Window m_window;
-		InputManager m_inputManager;
+		
 	};
 }

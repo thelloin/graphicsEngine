@@ -4,6 +4,7 @@
 
 #include <Box2D/Box2D.h>
 #include "Box.h"
+#include "Player.h"
 #include <vector>
 #include <Tengine/SpriteBatch.h>
 #include <Tengine/GLSLProgram.h>
@@ -42,6 +43,7 @@ private:
 
 	Tengine::Window* m_window;
 
+	Player m_player;
 	std::vector<Box> m_boxes;
 	std::unique_ptr<b2World> m_world;
 };
