@@ -2,6 +2,8 @@
 
 
 
+
+
 Box::Box()
 {
 }
@@ -11,9 +13,10 @@ Box::~Box()
 {
 }
 
-void Box::init(b2World* world, const glm::vec2& position, glm::vec2& dimensions)
+void Box::init(b2World* world, const glm::vec2& position, glm::vec2& dimensions, Tengine::ColorRGBA8 color)
 {
 	m_dimensions = dimensions;
+	m_color = color;
 	// Make the body
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;

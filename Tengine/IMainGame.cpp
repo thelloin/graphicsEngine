@@ -143,7 +143,7 @@ namespace Tengine
 
 	bool IMainGame::initSystems()
 	{
-		m_window.create("Default", 800, 600, 0);
+		m_window.create("Default", 1500, 1000, 0);
 		return true;
 	}
 

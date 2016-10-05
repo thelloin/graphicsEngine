@@ -4,6 +4,7 @@
 #include <Tengine/ResourceManager.h>
 #include <SDL/SDL.h>
 #include <iostream>
+#include <random>
 
 #define SCREEN_INDEX_NO_SCREEN -1
 
@@ -44,16 +45,34 @@ void GameplayScreen::onEntry()
 
 	// Make the ground
 	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -10.0f);
+	groundBodyDef.position.Set(0.0f, -23.0f);
 	b2Body* groundBody = m_world->CreateBody(&groundBodyDef);
 	// Make the ground fixture
 	b2PolygonShape groundBox;
 	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
-	Box newBox;
-	newBox.init(m_world.get(), glm::vec2(0.0f, 14.0f), glm::vec2(15.0f, 15.0f));
-	m_boxes.push_back(newBox);
+	// Test to add many boxes
+	std::mt19937 randGenerator;
+	std::uniform_real_distribution<float> xPos(-10.0f, 10.0f);
+	std::uniform_real_distribution<float> yPos(-10.0f, 15.0f);
+	std::uniform_real_distribution<float> size(0.5f, 2.5f);
+	std::uniform_int_distribution<int> color(0, 255);
+	const int NUM_BOXES = 50;
+
+	for (int i = 0; i < NUM_BOXES; ++i)
+	{
+		Tengine::ColorRGBA8 randColor;
+		randColor.r = color(randGenerator);
+		randColor.g = color(randGenerator);
+		randColor.b = color(randGenerator);
+		randColor.a = 255;
+		Box newBox;
+		newBox.init(m_world.get(), glm::vec2(xPos(randGenerator), yPos(randGenerator)), glm::vec2(size(randGenerator), size(randGenerator)), randColor);
+		m_boxes.push_back(newBox);
+	}
+
+	
 
 	//Initialize spritebatch
 	m_spriteBatch.init();
@@ -81,14 +100,18 @@ void GameplayScreen::onExit()
 
 void GameplayScreen::update()
 {
-	std::cout << "Update\n";
+	m_camera.update();
 	checkInput();
+
+	// Update the physics simulation
+	m_world->Step(1.0f / 60.0f, 6, 2);
+
 }
 void GameplayScreen::draw()
 {
 	std::cout << "Draw\n";
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	m_textureProgram.use();
 
@@ -112,7 +135,7 @@ void GameplayScreen::draw()
 		destRect.y = b.getBody()->GetPosition().y;
 		destRect.z = b.getDimensions().x;
 		destRect.w = b.getDimensions().y;
-		m_spriteBatch.draw(destRect, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), m_texture.id, 0.0f, Tengine::ColorRGBA8(255, 0, 0, 255), b.getBody()->GetAngle());
+		m_spriteBatch.draw(destRect, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), m_texture.id, 0.0f, b.getColor(), b.getBody()->GetAngle());
 	}
 
 	m_spriteBatch.end();
