@@ -3,7 +3,6 @@
 #include <Tengine/IMainGame.h>
 #include <Tengine/ResourceManager.h>
 #include <SDL/SDL.h>
-#include <iostream>
 #include <random>
 
 #define SCREEN_INDEX_NO_SCREEN -1
@@ -40,7 +39,7 @@ void GameplayScreen::destroy()
 
 void GameplayScreen::onEntry()
 {
-	b2Vec2 gravity(0.0f, -14.0);
+	b2Vec2 gravity(0.0f, -25.0);
 	m_world = std::make_unique<b2World>(gravity);
 
 	// Make the ground
@@ -112,7 +111,6 @@ void GameplayScreen::update()
 }
 void GameplayScreen::draw()
 {
-	std::cout << "Draw\n";
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

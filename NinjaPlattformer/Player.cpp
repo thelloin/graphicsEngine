@@ -39,6 +39,21 @@ void Player::update(Tengine::InputManager& inputManager)
 	{
 		body->ApplyForceToCenter(b2Vec2(100.0, 0.0), true);
 	}
+	else
+	{
+		// Apply damping
+		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x * 0.95f, body->GetLinearVelocity().y));
+	}
+
+	const float MAX_SPEED = 10.0f;
+	if (body->GetLinearVelocity().x < -MAX_SPEED)
+	{
+		body->SetLinearVelocity(b2Vec2(-MAX_SPEED, body->GetLinearVelocity().y));
+	}
+	else if (body->GetLinearVelocity().x > MAX_SPEED)
+	{
+		body->SetLinearVelocity(b2Vec2(MAX_SPEED, body->GetLinearVelocity().y));
+	}
 
 	// Loop through all the contact points of the player to
 	// determine if he is standing on the ground
@@ -56,13 +71,15 @@ void Player::update(Tengine::InputManager& inputManager)
 				if (manifold.points[i].y < body->GetPosition().y - m_collisionBox.getDimensions().y / 2.0f + 0.01f)
 				{
 					below = true;
+					break;
 				}
 			}
 			if (below) // He can jump
 			{
 				if (inputManager.isKeyPressed(SDLK_w)) // Move up this if??
 				{
-					std::cout << "CAN JUMP" << std::endl;
+					body->ApplyLinearImpulse(b2Vec2(0.0, 30.0), b2Vec2(0.0, 0.0), true);
+					break;
 				}
 			}
 		}
