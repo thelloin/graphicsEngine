@@ -1,5 +1,6 @@
 #include "GLSLProgram.h"
 #include "TengineErrors.h"
+#include "IOManager.h"
 
 #include <vector>
 
@@ -19,6 +20,17 @@ namespace Tengine {
 	// Compiles the shaders into a form that your GPU can understand
 	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
 	{
+		std::string vertSource;
+		std::string fragSource;
+
+		IOManager::readFileToBuffer(vertexShaderFilePath, vertSource);
+		IOManager::readFileToBuffer(fragmentShaderFilePath, fragSource);
+		
+		compileShadersFromSource(vertSource.c_str(), fragSource.c_str());
+	}
+
+	void GLSLProgram::compileShadersFromSource(const char* vertexSource, const char* fragmentSource)
+	{
 		//Vertex and fragment shaders are successfully compiled.
 		//Now time to link them together into a program.
 		//Get a program object.
@@ -36,8 +48,8 @@ namespace Tengine {
 			fatalError("Fragment shader failed to be created!");
 		}
 
-		compileShader(vertexShaderFilePath, _vertexShaderID);
-		compileShader(fragmentShaderFilePath, _fragmentShaderID);
+		compileShader(vertexSource, "Vertex Shader", _vertexShaderID);
+		compileShader(fragmentSource, "Fragment Shader", _fragmentShaderID);
 
 	}
 
@@ -113,31 +125,17 @@ namespace Tengine {
 		}
 	}
 
-	// Compiles a single shader file
-	void GLSLProgram::compileShader(const std::string& filePath, GLuint shaderID)
+	void GLSLProgram::dispose() 
 	{
-		// Open the file
-		std::ifstream shaderFile(filePath);
-		if (shaderFile.fail()) {
-			perror(filePath.c_str());
-			fatalError("Failed to open " + filePath);
-		}
+		if (_programID) glDeleteProgram(_programID);
+	}
 
-		// File contents stores all the text in the file
-		std::string fileContents = "";
-		// Line is used to grab each line of the file
-		std::string line;
+	// Compiles a single shader file
+	void GLSLProgram::compileShader(const char* source, const std::string& name, GLuint shaderID)
+	{
 
-		while (std::getline(shaderFile, line)) {
-			fileContents += line + "\n";
-		}
-
-		shaderFile.close();
-
-		// Get a pointer to our file contents c string
-		const char* contentsPtr = fileContents.c_str();
 		// Tell openGL that we want to use fileContents as the contents of the shader file
-		glShaderSource(shaderID, 1, &contentsPtr, nullptr);
+		glShaderSource(shaderID, 1, &source, nullptr);
 
 		// Compile the shader
 		glCompileShader(shaderID);
@@ -161,7 +159,7 @@ namespace Tengine {
 
 			// Print error log and quit
 			std::printf("%s\n", &(errorLog[0]));
-			fatalError("Shader " + filePath + "failed to compile");
+			fatalError("Shader " + name + "failed to compile");
 		}
 	}
 

@@ -30,11 +30,15 @@ namespace Tengine
 			limiter.begin();
 
 			inputManager.update();
+			// Call the custom update and draw methods
 			update();
-			draw();
+			if (m_isRunning)
+			{
+				draw();
 
-			m_fps = limiter.end();
-			m_window.swapBuffer();
+				m_fps = limiter.end();
+				m_window.swapBuffer();
+			}
 		}
 	}
 

@@ -11,6 +11,7 @@
 #include <Tengine/Camera2D.h>
 #include <Tengine/GLTexture.h>
 #include <Tengine/Window.h>
+#include <Tengine/DebugRenderer.h>
 
 class GameplayScreen : public Tengine::IGameScreen
 {
@@ -42,6 +43,9 @@ private:
 	Tengine::GLTexture m_texture;
 
 	Tengine::Window* m_window;
+
+	Tengine::DebugRenderer m_debugRenderer;
+	bool m_renderDebug = true;
 
 	Player m_player;
 	std::vector<Box> m_boxes;

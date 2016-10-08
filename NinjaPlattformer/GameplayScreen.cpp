@@ -5,6 +5,8 @@
 #include <SDL/SDL.h>
 #include <random>
 
+#define DEBUG_RENDER
+
 #define SCREEN_INDEX_NO_SCREEN -1
 
 GameplayScreen::GameplayScreen(Tengine::Window* window) : m_window(window)
@@ -54,6 +56,7 @@ void GameplayScreen::onEntry()
 	// Load the texture
 	m_texture = Tengine::ResourceManager::getTexture("Assets/bricks_top.png");
 
+	m_debugRenderer.init();
 
 	// Test to add many boxes
 	std::mt19937 randGenerator;
@@ -96,7 +99,7 @@ void GameplayScreen::onEntry()
 
 void GameplayScreen::onExit()
 {
-
+	m_debugRenderer.dispose();
 }
 
 void GameplayScreen::update()
@@ -139,8 +142,33 @@ void GameplayScreen::draw()
 
 	m_spriteBatch.end();
 	m_spriteBatch.renderBatch();
-
 	m_textureProgram.unuse();
+
+	// Debug rendering
+	if (m_renderDebug)
+	{
+		glm::vec4 destRect;
+		for (auto& b : m_boxes)
+		{
+			destRect.x = b.getBody()->GetPosition().x - b.getDimensions().x / 2.0f;
+			destRect.y = b.getBody()->GetPosition().y - b.getDimensions().y / 2.0f;
+			destRect.z = b.getDimensions().x;
+			destRect.w = b.getDimensions().y;
+
+			m_debugRenderer.drawBox(destRect, Tengine::ColorRGBA8(255, 255, 255, 255), b.getBody()->GetAngle());
+		}
+		auto b = m_player.getBox();
+		destRect.x = b.getBody()->GetPosition().x - b.getDimensions().x / 2.0f;
+		destRect.y = b.getBody()->GetPosition().y - b.getDimensions().y / 2.0f;
+		destRect.z = b.getDimensions().x;
+		destRect.w = b.getDimensions().y;
+
+		m_debugRenderer.drawBox(destRect, Tengine::ColorRGBA8(255, 255, 255, 255), b.getBody()->GetAngle());
+
+		// Render player
+		m_debugRenderer.end();
+		m_debugRenderer.render(projectionMatrix, 2.0f);
+	}
 }
 
 void GameplayScreen::checkInput()

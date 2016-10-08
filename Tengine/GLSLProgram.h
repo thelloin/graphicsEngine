@@ -15,6 +15,8 @@ namespace Tengine {
 
 		void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 
+		void compileShadersFromSource(const char* vertexSource, const char* fragmentSource);
+		
 		void linkShaders();
 
 		void addAttribute(const std::string& attributeName);
@@ -23,11 +25,13 @@ namespace Tengine {
 
 		void use();
 		void unuse();
+
+		void dispose();
 	private:
 
 		int _numAttributes;
 
-		void compileShader(const std::string& filePath, GLuint shaderID);
+		void compileShader(const char* source, const std::string& name, GLuint shaderID);
 
 		GLuint _programID;
 
