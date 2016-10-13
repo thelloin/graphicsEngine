@@ -94,7 +94,7 @@ void GameplayScreen::onEntry()
 	m_camera.setScale(32.0f);
 
 	// Init player
-	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(1.0f, 2.0f), Tengine::ColorRGBA8(255, 255, 255, 255));
+	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 }
 
 void GameplayScreen::onExit()
@@ -144,6 +144,7 @@ void GameplayScreen::draw()
 	m_spriteBatch.renderBatch();
 	m_textureProgram.unuse();
 
+	
 	// Debug rendering
 	if (m_renderDebug)
 	{
@@ -157,18 +158,15 @@ void GameplayScreen::draw()
 
 			m_debugRenderer.drawBox(destRect, Tengine::ColorRGBA8(255, 255, 255, 255), b.getBody()->GetAngle());
 		}
-		auto b = m_player.getBox();
-		destRect.x = b.getBody()->GetPosition().x - b.getDimensions().x / 2.0f;
-		destRect.y = b.getBody()->GetPosition().y - b.getDimensions().y / 2.0f;
-		destRect.z = b.getDimensions().x;
-		destRect.w = b.getDimensions().y;
+		
+		m_player.drawDebug(m_debugRenderer);
 
-		m_debugRenderer.drawBox(destRect, Tengine::ColorRGBA8(255, 255, 255, 255), b.getBody()->GetAngle());
-
+		
 		// Render player
 		m_debugRenderer.end();
 		m_debugRenderer.render(projectionMatrix, 2.0f);
 	}
+	
 }
 
 void GameplayScreen::checkInput()

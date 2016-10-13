@@ -155,18 +155,17 @@ namespace Tengine {
 		m_indices.push_back(i);
 	}
 
-	void DebugRenderer::drawCircle(const glm::vec4& center, const ColorRGBA8& color, float radius)
+	void DebugRenderer::drawCircle(const glm::vec2& center, const ColorRGBA8& color, float radius)
 	{
-		const static int NUM_VERTS = 100;
+		static const int NUM_VERTS = 100;
 		// Set up vertices
-		size_t start = m_verts.size();
+		int start = m_verts.size();
 		m_verts.resize(m_verts.size() + NUM_VERTS);
-		for (int i = 0; i < NUM_VERTS; i++)
-		{
+		for (int i = 0; i < NUM_VERTS; i++) {
 			float angle = ((float)i / NUM_VERTS) * PI * 2.0f;
 			m_verts[start + i].position.x = cos(angle) * radius + center.x;
 			m_verts[start + i].position.y = sin(angle) * radius + center.y;
-			m_verts[start + 1].color = color;
+			m_verts[start + i].color = color;
 		}
 
 		// Set up indices for indexed drawing

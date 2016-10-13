@@ -45,7 +45,7 @@ private:
 	Tengine::Window* m_window;
 
 	Tengine::DebugRenderer m_debugRenderer;
-	bool m_renderDebug = true;
+	bool m_renderDebug = false;
 
 	Player m_player;
 	std::vector<Box> m_boxes;
