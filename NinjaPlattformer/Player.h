@@ -26,6 +26,13 @@ public:
 
 	const Capsule& getBox() const { return m_capsule; }
 
+	glm::vec2 getPosition() const {
+		glm::vec2 rv;
+		rv.x = m_capsule.getBody()->GetPosition().x;
+		rv.y = m_capsule.getBody()->GetPosition().y;
+		return rv;
+	}
+
 private:
 	glm::vec2 m_drawDims;
 	Tengine::ColorRGBA8 m_color;

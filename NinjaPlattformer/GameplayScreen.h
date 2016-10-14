@@ -39,6 +39,7 @@ private:
 
 	Tengine::SpriteBatch m_spriteBatch;
 	Tengine::GLSLProgram m_textureProgram;
+	Tengine::GLSLProgram m_lightProgram;
 	Tengine::Camera2D m_camera;
 	Tengine::GLTexture m_texture;
 
@@ -46,6 +47,7 @@ private:
 
 	Tengine::DebugRenderer m_debugRenderer;
 	bool m_renderDebug = false;
+	bool m_lightsOn = false;
 
 	Player m_player;
 	std::vector<Box> m_boxes;

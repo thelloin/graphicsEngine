@@ -5,6 +5,8 @@
 #include <SDL/SDL.h>
 #include <random>
 
+#include "Light.h"
+
 #define DEBUG_RENDER
 
 #define SCREEN_INDEX_NO_SCREEN -1
@@ -12,6 +14,7 @@
 GameplayScreen::GameplayScreen(Tengine::Window* window) : m_window(window)
 {
 	m_renderDebug = false;
+	m_lightsOn = true;
 }
 
 
@@ -82,19 +85,24 @@ void GameplayScreen::onEntry()
 	m_spriteBatch.init();
 
 	// Shader init
-	// Compile our color shader
+	// Compile the texture shader
 	m_textureProgram.compileShaders("Shaders/textureShading.vert", "Shaders/textureShading.frag");
 	m_textureProgram.addAttribute("vertexPosition");
 	m_textureProgram.addAttribute("vertexColor");
 	m_textureProgram.addAttribute("vertexUV");
 	m_textureProgram.linkShaders();
+	// Compile the light shader
+	m_lightProgram.compileShaders("Shaders/lightShading.vert", "Shaders/lightShading.frag");
+	m_lightProgram.addAttribute("vertexPosition");
+	m_lightProgram.addAttribute("vertexColor");
+	m_lightProgram.addAttribute("vertexUV");
+	m_lightProgram.linkShaders();
 
 	// Init camera
 	m_camera.init(m_window->getScreenWidth(), m_window->getScreenHeight());
 	m_camera.setScale(32.0f);
 
 	// Init player
-	//m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 }
 
@@ -166,6 +174,39 @@ void GameplayScreen::draw()
 		// Render player
 		m_debugRenderer.end();
 		m_debugRenderer.render(projectionMatrix, 2.0f);
+	}
+
+	if (m_lightsOn)
+	{
+		// Render some test lights
+		Light playerLight;
+		playerLight.color = Tengine::ColorRGBA8(255, 255, 255, 128);
+		playerLight.position = m_player.getPosition();
+		playerLight.size = 30.0f;
+
+		Light mouseLight;
+		mouseLight.color = Tengine::ColorRGBA8(255, 0, 255, 150);
+		mouseLight.position = m_camera.convertScreenToWorld(m_game->inputManager.getMouseCoords());
+		mouseLight.size = 45.0f;
+
+		m_lightProgram.use();
+		pUniform = m_lightProgram.getUniformLocation("P");
+		glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+		// Additive blending
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		m_spriteBatch.begin();
+
+		playerLight.draw(m_spriteBatch);
+		mouseLight.draw(m_spriteBatch);
+
+		m_spriteBatch.end();
+		m_spriteBatch.renderBatch();
+		m_lightProgram.unuse();
+
+		// Reset to regular alpha blending
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 }
