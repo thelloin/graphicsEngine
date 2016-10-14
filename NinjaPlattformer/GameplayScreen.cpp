@@ -11,7 +11,7 @@
 
 GameplayScreen::GameplayScreen(Tengine::Window* window) : m_window(window)
 {
-
+	m_renderDebug = false;
 }
 
 
@@ -64,7 +64,7 @@ void GameplayScreen::onEntry()
 	std::uniform_real_distribution<float> yPos(-10.0f, 15.0f);
 	std::uniform_real_distribution<float> size(0.5f, 2.5f);
 	std::uniform_int_distribution<int> color(0, 255);
-	const int NUM_BOXES = 50;
+	const int NUM_BOXES = 10;
 
 	for (int i = 0; i < NUM_BOXES; ++i)
 	{
@@ -94,6 +94,7 @@ void GameplayScreen::onEntry()
 	m_camera.setScale(32.0f);
 
 	// Init player
+	//m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 }
 
