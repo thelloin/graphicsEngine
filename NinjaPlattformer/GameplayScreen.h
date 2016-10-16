@@ -13,6 +13,8 @@
 #include <Tengine/Window.h>
 #include <Tengine/DebugRenderer.h>
 
+#include <Tengine/GUI.h>
+
 class GameplayScreen : public Tengine::IGameScreen
 {
 public:
@@ -44,6 +46,7 @@ private:
 	Tengine::GLTexture m_texture;
 
 	Tengine::Window* m_window;
+	Tengine::GUI m_gui;
 
 	Tengine::DebugRenderer m_debugRenderer;
 	bool m_renderDebug = false;
