@@ -4,15 +4,17 @@
 #include <Tengine/ResourceManager.h>
 #include <SDL/SDL.h>
 #include <random>
+#include <iostream>
 
 #include "Light.h"
+#include "ScreenIndices.h"
 
 #define DEBUG_RENDER
 
-#define SCREEN_INDEX_NO_SCREEN -1
 
 GameplayScreen::GameplayScreen(Tengine::Window* window) : m_window(window)
 {
+	m_screenIndex = SCREEN_INDEX_GAMEPLAY;
 	m_renderDebug = false;
 	m_lightsOn = true;
 }
@@ -29,7 +31,7 @@ int GameplayScreen::getNextScreenIndex() const
 
 int GameplayScreen::getPreviousScreenIndex() const
 {
-	return SCREEN_INDEX_NO_SCREEN;
+	return SCREEN_INDEX_MAINMENU;
 }
 
 void GameplayScreen::build()
@@ -106,20 +108,7 @@ void GameplayScreen::onEntry()
 	// Init player
 	m_player.init(m_world.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), Tengine::ColorRGBA8(255, 255, 255, 255));
 
-	// Initialize the UI
-	m_gui.init("GUI");
-	m_gui.loadScheme("TaharezLook.scheme");
-	m_gui.setFont("DejaVuSans-10");
-	// Add a test button
-	CEGUI::PushButton* testButton = static_cast<CEGUI::PushButton*>(m_gui.createWidget("TaharezLook/Button", glm::vec4(0.5f, 0.5f, 0.1f, 0.05f), glm::vec4(0.0f), "TestButton"));
-	testButton->setText("Hello World!");
-
-	CEGUI::Combobox* testBComboBox = static_cast<CEGUI::Combobox*>(m_gui.createWidget("TaharezLook/Combobox", glm::vec4(0.2f, 0.2f, 0.1f, 0.05f), glm::vec4(0.0f), "TestCombobox"));
-
-
-	m_gui.setMouseCursor("TaharezLook/MouseArrow");
-	m_gui.showMouseCursor();
-	SDL_ShowCursor(0);
+	initUI();
 }
 
 void GameplayScreen::onExit()
@@ -229,6 +218,27 @@ void GameplayScreen::draw()
 	
 }
 
+void GameplayScreen::initUI()
+{
+	// Initialize the UI
+	m_gui.init("GUI");
+	m_gui.loadScheme("TaharezLook.scheme");
+	m_gui.setFont("DejaVuSans-10");
+	// Add a test button
+	CEGUI::PushButton* testButton = static_cast<CEGUI::PushButton*>(m_gui.createWidget("TaharezLook/Button", glm::vec4(0.5f, 0.5f, 0.1f, 0.05f), glm::vec4(0.0f), "TestButton"));
+	testButton->setText("Exit Game!");
+
+	// Set the event to be called when we click
+	testButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GameplayScreen::onExitClicked, this));
+
+	CEGUI::Combobox* testBComboBox = static_cast<CEGUI::Combobox*>(m_gui.createWidget("TaharezLook/Combobox", glm::vec4(0.2f, 0.2f, 0.1f, 0.05f), glm::vec4(0.0f), "TestCombobox"));
+
+
+	m_gui.setMouseCursor("TaharezLook/MouseArrow");
+	m_gui.showMouseCursor();
+	SDL_ShowCursor(0);
+}
+
 void GameplayScreen::checkInput()
 {
 	SDL_Event evnt;
@@ -238,3 +248,11 @@ void GameplayScreen::checkInput()
 		m_gui.onSDLEvent(evnt);
 	}
 }
+
+bool GameplayScreen::onExitClicked(const CEGUI::EventArgs& e)
+{
+	m_currentState = Tengine::ScreenState::EXIT_APPLICATION;
+
+	return true;
+}
+

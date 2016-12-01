@@ -219,6 +219,8 @@ namespace Tengine {
 			m_context->injectKeyUp(SDLKeyToCEGUIKey(evnt.key.keysym.sym));
 			break;
 		case SDL_TEXTINPUT:
+			// This is not working properly, something with converting utf-8 to utf-32
+			// TODO: Fix this conversion problem
 			codePoint = 0;
 			for (int i = 0; evnt.text.text[i] != '\0'; ++i)
 			{

@@ -1,5 +1,7 @@
 #pragma once
 
+#define SCREEN_INDEX_NO_SCREEN -1
+
 namespace Tengine {
 
 	class IMainGame;

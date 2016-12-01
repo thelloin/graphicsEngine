@@ -2,8 +2,6 @@
 
 #include <Tengine/IGameScreen.h>
 
-#include <Box2D/Box2D.h>
-#include "Box.h"
 #include "Player.h"
 #include <vector>
 #include <Tengine/SpriteBatch.h>
@@ -15,11 +13,11 @@
 
 #include <Tengine/GUI.h>
 
-class GameplayScreen : public Tengine::IGameScreen
+class MainMenuScreen : public Tengine::IGameScreen
 {
 public:
-	GameplayScreen(Tengine::Window* window);
-	~GameplayScreen();
+	MainMenuScreen(Tengine::Window* window);
+	~MainMenuScreen();
 
 	// Returns the index of the next or previou screen when changing screens
 	virtual int getNextScreenIndex() const override;
@@ -40,23 +38,11 @@ private:
 	void initUI();
 	void checkInput();
 
+	bool onNewGameClicked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
-	Tengine::SpriteBatch m_spriteBatch;
-	Tengine::GLSLProgram m_textureProgram;
-	Tengine::GLSLProgram m_lightProgram;
 	Tengine::Camera2D m_camera;
-	Tengine::GLTexture m_texture;
-
 	Tengine::Window* m_window;
 	Tengine::GUI m_gui;
-
-	Tengine::DebugRenderer m_debugRenderer;
-	bool m_renderDebug = false;
-	bool m_lightsOn = false;
-
-	Player m_player;
-	std::vector<Box> m_boxes;
-	std::unique_ptr<b2World> m_world;
+	
 };
-
